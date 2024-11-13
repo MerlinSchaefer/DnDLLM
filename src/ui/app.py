@@ -1,7 +1,8 @@
 import streamlit as st
+
 # from llama_index import RetrieverQueryEngine  # Placeholder for later integration
 # Placeholder import for your model loading function
-# from src.models.llama_model import load_model 
+# from src.models.llama_model import load_model
 
 
 # Set page configuration
@@ -15,7 +16,7 @@ st.sidebar.write("This is a prototype for a Dungeon Master assistant app.")
 st.title("Dungeon Master Assistant Chat")
 
 # Initialize chat history in session state
-if 'messages' not in st.session_state:
+if "messages" not in st.session_state:
     st.session_state.messages = []
 
 # Display existing chat messages
@@ -35,4 +36,3 @@ if prompt := st.chat_input("Ask me anything"):
     st.session_state.messages.append({"role": "assistant", "content": response})
     with st.chat_message("assistant"):
         st.markdown(response)
-
