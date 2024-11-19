@@ -1,5 +1,5 @@
 from dotenv import find_dotenv, load_dotenv
-from pydantic import BaseSettings
+from pydantic_settings import BaseSettings
 
 
 class DatabaseConfig(BaseSettings):
