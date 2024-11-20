@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 
 import psycopg2
 from dotenv import load_dotenv
@@ -34,6 +35,14 @@ try:
             print(f"Database '{db_name}' created.")
         else:
             print(f"Database '{db_name}' already exists.")
+            c.execute("CREATE SCHEMA IF NOT EXISTS public;")
+            c.execute("CREATE TABLE IF NOT EXISTS public.dev_table (id serial PRIMARY KEY, testname VARCHAR(50));")
+            today_date = f"test:{datetime.now().strftime('%Y-%m-%d %H:%M')}"  # noqa
+            c.execute("INSERT INTO public.dev_table (testname) VALUES (%s);", (today_date,))
+            c.execute("SELECT * FROM dev_table; ")
+
+            table = c.fetchall()
+            print(table)
 finally:
     conn.close()
 # Close the initial connection
