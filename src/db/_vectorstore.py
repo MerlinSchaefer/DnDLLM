@@ -5,14 +5,14 @@ from src.config.configuration import db_config
 
 def get_vector_store(
     table_name: str = "dev_vectors",  # TODO: adjust
-    embed_dim: int = 384,  # TODO: adjust
+    embed_dim: int = 1024,  # set for bge-large-en model
 ) -> PGVectorStore:
     """
     Connect to the postgres database and set up PGVectorStore.
 
     Args:
         table_name (str): The table name. Defaults to "dev_vectors".
-        embed_dim (int): The embedding dimension. Defaults to 384.
+        embed_dim (int): The embedding dimension. Defaults to 1024.
 
     Returns:
         PGVectorStore: The vector store.
