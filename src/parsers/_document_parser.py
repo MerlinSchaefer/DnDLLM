@@ -1,13 +1,16 @@
+from pathlib import Path
+
 from llama_index.core.node_parser import SentenceSplitter
 from llama_index.core.schema import TextNode
 from llama_index.readers.file import MarkdownReader, PyMuPDFReader
 
+# from src.db import get_vector_store
 from src.llm.embeddings import get_embedding_model
 
 
 # TODO: look into MarkdownNodeParser
 class DocumentParser:
-    def __init__(self, file_path: str, doc_type: str, chunk_size: int = 1024):
+    def __init__(self, file_path: str | Path, doc_type: str, chunk_size: int = 1024):
         """
         Initialize the DocumentParser.
 
@@ -23,19 +26,18 @@ class DocumentParser:
         self.text_chunks: list = []
         self.doc_idxs: list = []
         self.nodes: list = []
-
-        if doc_type == "pdf":
-            self.loader = PyMuPDFReader()
-        elif doc_type == "markdown":
-            self.loader = MarkdownReader()
-        else:
-            raise ValueError("Unsupported document type. Use 'pdf' or 'markdown'.")
+        self.doc_type = doc_type
 
     def _read_documents(self) -> None:
         """
         Read documents from the file.
         """
-        self.documents = self.loader.load(file_path=self.file_path)
+        if self.doc_type == "pdf":
+            self.documents = PyMuPDFReader().load_data(file_path=self.file_path)
+        elif self.doc_type == "md":
+            self.documents = MarkdownReader().load_data(file=self.file_path)
+        else:
+            raise ValueError("Unsupported document type. Use 'pdf' or 'markdown'.")
 
     def _split_into_chunks(self) -> list[str]:
         """
@@ -87,9 +89,20 @@ class DocumentParser:
         return self.nodes
 
 
-if __name__ == "__main__":
-    # Usage example
-    file_path = "../../../data/llama2.pdf"
-    doc_type = "pdf"
-    document_parser = DocumentParser(file_path, doc_type)
-    nodes = document_parser.load_chunk_and_embed()
+# if __name__ == "__main__":
+#     # from pathlib import Path
+
+#     # LOCAL_DATA = Path(__file__).resolve().parent.parent.parent / "data"
+#     # print(LOCAL_DATA)
+#     # # Usage example
+#     # file_path = LOCAL_DATA / "llama2.pdf"
+#     # doc_type = "pdf"
+#     # document_parser = DocumentParser(file_path, doc_type)
+#     # nodes = document_parser.load_chunk_and_embed()
+#     # print(nodes)
+#     # node_ids = [node.id_ for node in nodes]
+#     # vectorstore = get_vector_store()
+#     # input("Press Enter to add nodes to vector store...")
+#     # vectorstore.add(nodes)
+#     # nodes_retrieved = vectorstore.get_nodes(node_ids)
+#     # print(nodes_retrieved)
